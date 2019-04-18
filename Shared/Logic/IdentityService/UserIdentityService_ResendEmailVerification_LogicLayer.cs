@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of resend email verification request inputs.
          */
-        internal static ResendEmailVerificationRequest CheckValidResendEmailVerificationRequest(JObject requestBody) {
+        public static ResendEmailVerificationRequest CheckValidResendEmailVerificationRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -54,7 +54,7 @@ namespace BDDReferenceService.Logic
         /**
          * Resend email verification.
          */
-        internal static async Task ResendEmailVerification(AmazonDynamoDBClient dbClient, ResendEmailVerificationRequest resendEmailVerificationRequest)
+        public static async Task ResendEmailVerification(AmazonDynamoDBClient dbClient, ResendEmailVerificationRequest resendEmailVerificationRequest)
         {
             Debug.Tested();
             Debug.AssertValid(dbClient);
