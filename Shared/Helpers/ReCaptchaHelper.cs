@@ -5,18 +5,18 @@ using BDDReferenceService.Logic;
 namespace BDDReferenceService
 {
     
-    internal static class ReCaptchaHelper {
+    public static class ReCaptchaHelper {
 
         /*
          * Errors
          */
-        internal const string ERROR_INVALID_RECAPTCHA_TOKEN = "ERROR_INVALID_RECAPTCHA_TOKEN";
+        public const string ERROR_INVALID_RECAPTCHA_TOKEN = "ERROR_INVALID_RECAPTCHA_TOKEN";
 
         /**
          * Check reCaptcha token.
          * Will eventually be asynchronous.
          */
-        internal static void CheckReCaptchaToken(string reCaptchaToken) {
+        public static void CheckReCaptchaToken(string reCaptchaToken) {
             Debug.Untested();
 
             if (string.IsNullOrEmpty(reCaptchaToken)) {
