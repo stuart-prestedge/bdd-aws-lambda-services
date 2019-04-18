@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user phone number request inputs.
          */
-        internal static SetUserPhoneNumberRequest CheckValidSetUserPhoneNumberRequest(JObject requestBody) {
+        public static SetUserPhoneNumberRequest CheckValidSetUserPhoneNumberRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -54,7 +54,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user phone number.
          */
-        internal static async Task SetUserPhoneNumber(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserPhoneNumberRequest setUserPhoneNumberRequest) {
+        public static async Task SetUserPhoneNumber(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserPhoneNumberRequest setUserPhoneNumberRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
