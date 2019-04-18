@@ -46,7 +46,7 @@ namespace BDDReferenceService
         /**
          * Lambda logic callback.
          */
-        //public delegate APIGatewayProxyResponse ExecuteLogic<in T, out TResult>(T arg)
+        //??--public delegate APIGatewayProxyResponse ExecuteLogic<in T, out TResult>(T arg)
 
         /**
          * Execute a GET HTTP method request.
@@ -60,12 +60,15 @@ namespace BDDReferenceService
             LoggingHelper.LogMessage("LambdaHelper.ExecuteGetAsync()");
             if (request != null)
             {
+                // Check that the method is GET
+                Debug.AssertValid(request.HttpMethod);
+                APIHelper.CheckRequestMethod(request.HttpMethod, APIHelper.REQUEST_METHOD_GET);
+
                 string requestBodyString = request.Body;
                 LoggingHelper.LogMessage(requestBodyString);
                 if (string.IsNullOrEmpty(requestBodyString))
                 {
                     LoggingHelper.LogMessage("Empty requestBodyString");
-                    //??--AmazonDynamoDBClient dbClient = new AmazonDynamoDBClient();
                     return await logic(new AWSDataStores());
                 }
                 else
@@ -90,16 +93,20 @@ namespace BDDReferenceService
         /**
          * Execute a non-GET HTTP method request.
          */
-        public static async Task<APIGatewayProxyResponse> ExecuteAsync(APIGatewayProxyRequest request, Func<IDataStores, IDictionary<string, string>, JObject, Task<APIGatewayProxyResponse>> logic)
+        public static async Task<APIGatewayProxyResponse> ExecuteAsync(APIGatewayProxyRequest request, string requiredHttpMethod, Func<IDataStores, JObject, Task<APIGatewayProxyResponse>> logic)
         {
             Debug.Untested();
             Debug.AssertValidOrNull(request);
+            Debug.AssertString(requiredHttpMethod);
 
             LoggingHelper.LogMessage("LambdaHelper.ExecuteAsync()");
             if (request != null)
             {
+                // Check the method type
+                Debug.AssertValid(request.HttpMethod);
+                APIHelper.CheckRequestMethod(request.HttpMethod, requiredHttpMethod);
+
                 LoggingHelper.LogMessage("LambdaHelper.ExecuteAsync() - request is non-null");
-                Debug.AssertValid(request.Headers);
                 Debug.AssertValidOrNull(request.Body);
                 LoggingHelper.LogMessage(request.Body);
                 JObject requestBody = null;
@@ -109,7 +116,7 @@ namespace BDDReferenceService
                 }
                 LoggingHelper.LogMessage($"LambdaHelper.ExecuteAsync() - requestBody: {requestBody}");
                 //??--AmazonDynamoDBClient dbClient = new AmazonDynamoDBClient();
-                return await logic(new AWSDataStores(), request.Headers, requestBody);
+                return await logic(new AWSDataStores(), requestBody);
             }
             else
             {

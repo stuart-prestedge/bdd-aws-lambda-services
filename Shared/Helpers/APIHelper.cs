@@ -15,6 +15,14 @@ namespace BDDReferenceService
     public static class APIHelper {
 
         /*
+         * Request methods
+         */
+        public const string REQUEST_METHOD_GET = "GET";
+        public const string REQUEST_METHOD_PUT = "PUT";
+        public const string REQUEST_METHOD_POST = "POST";
+        public const string REQUEST_METHOD_DELETE = "DELETE";
+
+        /*
          * Response status codes
          */
         public const int STATUS_CODE_OK = 200;
@@ -287,7 +295,7 @@ namespace BDDReferenceService
         /**
          * Convert a date/time object to a date/time string in "YYYY-MM-DDTHH:MM::SSZ" format.
          */
-        internal static string APIDateTimeStringFromDateTime(DateTime? dt) {
+        public static string APIDateTimeStringFromDateTime(DateTime? dt) {
             Debug.Tested();
             Debug.AssertValidOrNull(dt);
 
@@ -316,6 +324,26 @@ namespace BDDReferenceService
                 Debug.Tested();
             }
             return retVal;
+        }
+
+        /**
+         * Check that the correct HTTP method is used.
+         */
+        public static void CheckRequestMethod(string httpMethod, string requiredHttpMethod)
+        {
+            Debug.Untested();
+            Debug.AssertString(httpMethod);
+            Debug.AssertString(requiredHttpMethod);
+            Debug.Assert((requiredHttpMethod == REQUEST_METHOD_GET) ||
+                         (requiredHttpMethod == REQUEST_METHOD_PUT) ||
+                         (requiredHttpMethod == REQUEST_METHOD_POST) ||
+                         (requiredHttpMethod == REQUEST_METHOD_DELETE));
+
+            if (httpMethod != requiredHttpMethod)
+            {
+                Debug.Untested();
+                throw new Exception(SharedLogicLayer.ERROR_INVALID_HTTP_METHOD, new Exception(SharedLogicLayer.ERROR_INVALID_HTTP_METHOD));
+            }
         }
 
         /**
@@ -830,25 +858,25 @@ namespace BDDReferenceService
          * Decode the Authorization header to check.
          * Returns the logged in user ID.
          */
-        //??? internal static async Task<string> CheckLoggedIn(AmazonDynamoDBClient dbClient, IDictionary<string, string> requestHeaders) {
-        //     Debug.Untested();
-        //     Debug.AssertValid(dbClient);
-        //     Debug.AssertValid(requestHeaders);
+        public static async Task<string> CheckLoggedIn(AmazonDynamoDBClient dbClient, IDictionary<string, string> requestHeaders) {
+            Debug.Untested();
+            Debug.AssertValid(dbClient);
+            Debug.AssertValid(requestHeaders);
 
-        //     string userId = await GetAuthorization(dbClient, requestHeaders);
-        //     Debug.AssertIDOrNull(userId);
-        //     if (userId != null)
-        //     {
-        //         // A valid user ID exists.
-        //         Debug.Tested();
-        //         return userId;
-        //     }
-        //     else
-        //     {
-        //         Debug.Tested();
-        //         throw new Exception(SharedLogicLayer.ERROR_NOT_LOGGED_IN, new Exception(SharedLogicLayer.ERROR_NOT_LOGGED_IN));
-        //     }
-        // }
+            string userId = await GetAuthorization(dbClient, requestHeaders);
+            Debug.AssertIDOrNull(userId);
+            if (userId != null)
+            {
+                // A valid user ID exists.
+                Debug.Tested();
+                return userId;
+            }
+            else
+            {
+                Debug.Tested();
+                throw new Exception(SharedLogicLayer.ERROR_NOT_LOGGED_IN, new Exception(SharedLogicLayer.ERROR_NOT_LOGGED_IN));
+            }
+        }
 
         /**
          * Create an invalid parameter exception.
@@ -917,7 +945,8 @@ namespace BDDReferenceService
             {
                 statusCode = STATUS_CODE_UNAUTHORIZED;
             }
-            else if ((exception.Message == SharedLogicLayer.ERROR_INVALID_INPUT_PARAMETER) ||
+            else if ((exception.Message == SharedLogicLayer.ERROR_INVALID_HTTP_METHOD) ||
+                (exception.Message == SharedLogicLayer.ERROR_INVALID_INPUT_PARAMETER) ||
                 (exception.Message == IdentityServiceLogicLayer.ERROR_NO_PHONE_NUMBER_SET) ||
                 (exception.Message == IdentityServiceLogicLayer.ERROR_PHONE_NUMBER_VERIFIED) ||
                 (exception.Message == GameServiceLogicLayer.ERROR_GAME_NAME_ALREADY_IN_USE) ||

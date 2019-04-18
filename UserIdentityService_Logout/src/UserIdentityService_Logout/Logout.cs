@@ -15,9 +15,9 @@ using BDDReferenceService.Contracts;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
-namespace AdminCountryService_UpdateCountry
+namespace UserIdentityService_Logout
 {
-    public class Endpoint_UpdateCountry
+    public class Endpoint_Logout
     {
         
         /// <summary>
@@ -37,49 +37,50 @@ namespace AdminCountryService_UpdateCountry
                 Debug.AssertValid(dataStores);
                 Debug.AssertValid(requestBody);
 
-                return await UpdateCountry(dataStores, request.Headers, requestBody);
+                return await Logout(dataStores, request.Headers, requestBody);
             });
         }
 
         /**
-         * Get the countries.
+         * Logout.
          */
-        public async Task<APIGatewayProxyResponse> UpdateCountry(IDataStores dataStores, IDictionary<string, string> requestHeaders, JObject requestBody)
+        public async Task<APIGatewayProxyResponse> Logout(IDataStores dataStores,
+                                                          IDictionary<string, string> requestHeaders,
+                                                          JObject requestBody)
         {
-            Debug.Tested();
+            Debug.Untested();
             Debug.AssertValid(dataStores);
             Debug.AssertValid(requestHeaders);
-            Debug.AssertValidOrNull(requestBody);
+            Debug.AssertValid(requestBody);
 
             try {
                 // Log call
-                LoggingHelper.LogMessage($"AdminCountryService::UpdateCountry()");
+                LoggingHelper.LogMessage($"UserIdentityService::Logout()");
 
                 // Get the NoSQL DB client
-                AmazonDynamoDBClient dbClient = dataStores.GetNoSQLDataStore().GetDBClient();
+                AmazonDynamoDBClient dbClient = (AmazonDynamoDBClient)dataStores.GetNoSQLDataStore().GetDBClient();
                 Debug.AssertValid(dbClient);
 
                 // Check inputs
-                Country country = CountryServiceLogicLayer.CheckValidUpdateCountryRequest(requestBody);
+                APIHelper.CheckEmptyRequestBody(requestBody);
 
-                // Check security
-                User user = await APIHelper.CheckLoggedInAsAdmin(dbClient, requestHeaders);
-                Debug.AssertValid(user);
+                // Check authenticated endpoint security
+                string loggedInUserId = await APIHelper.CheckLoggedIn(dbClient, requestHeaders);
+                Debug.AssertID(loggedInUserId);
 
                 // Perform logic
-                bool created = await CountryServiceLogicLayer.UpdateCountry(dbClient, loggedInUserId, country);
+                await UserIdentityService_Logout_LogicLayer.Logout(dbClient, loggedInUserId);
 
-                // Return response
-                return new APIGatewayProxyResponse
-                    {
-                        StatusCode = created ? APIHelper.STATUS_CODE_CREATED : APIHelper.STATUS_CODE_NO_CONTENT
-                    };
+                // Respond
+                return new APIGatewayProxyResponse {
+                    StatusCode = APIHelper.STATUS_CODE_NO_CONTENT
+                };
             } catch (Exception exception) {
-                Debug.Unreachable();
+                Debug.Tested();
                 return APIHelper.ResponseFromException(exception);
             }
         }
 
-    }   // Endpoint_UpdateCountry
+    }   // Endpoint_Logout
 
-}   // AdminCountryService_UpdateCountry
+}   // UserIdentityService_Logout

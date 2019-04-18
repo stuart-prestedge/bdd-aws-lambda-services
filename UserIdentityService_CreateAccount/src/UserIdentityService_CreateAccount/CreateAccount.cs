@@ -32,9 +32,8 @@ namespace UserIdentityService_CreateAccount
             Debug.AssertValid(request);
             Debug.AssertValid(context);
 
-            return await LambdaHelper.ExecuteAsync(request, async (IDataStores dataStores, IDictionary<string, string> requestHeaders, JObject requestBody) => {
+            return await LambdaHelper.ExecuteAsync(request, APIHelper.REQUEST_METHOD_POST, async (IDataStores dataStores, JObject requestBody) => {
                 Debug.AssertValid(dataStores);
-                Debug.AssertValid(requestHeaders);
                 Debug.AssertValid(requestBody);
 
                 return await CreateAccount(dataStores, requestBody);
@@ -44,7 +43,8 @@ namespace UserIdentityService_CreateAccount
         /**
          * Create a new account.
          */
-        internal async Task<APIGatewayProxyResponse> CreateAccount(IDataStores dataStores, JObject requestBody) {
+        internal async Task<APIGatewayProxyResponse> CreateAccount(IDataStores dataStores, JObject requestBody)
+        {
             Debug.Tested();
             Debug.AssertValid(dataStores);
             Debug.AssertValidOrNull(requestBody);
@@ -58,11 +58,11 @@ namespace UserIdentityService_CreateAccount
                 Debug.AssertValid(dbClient);
 
                 // Check inputs
-                CreateAccountRequest createAccountRequest = IdentityServiceLogicLayer.CheckValidCreateAccountRequest(requestBody);
+                CreateAccountRequest createAccountRequest = UserIdentityService_CreateAccount_LogicLayer.CheckValidCreateAccountRequest(requestBody);
                 Debug.AssertValid(createAccountRequest);
 
                 // Perform logic
-                Tuple<User, bool> result = await IdentityServiceLogicLayer.CreateAccount(dbClient, createAccountRequest);
+                Tuple<User, bool> result = await UserIdentityService_CreateAccount_LogicLayer.CreateAccount(dbClient, createAccountRequest);
                 Debug.AssertValid(result);
                 Debug.AssertValid(result.Item1);
                 if (!result.Item2) {

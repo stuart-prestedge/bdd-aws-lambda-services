@@ -47,7 +47,7 @@ namespace BDDReferenceService
             Debug.Tested();
             Debug.AssertValid(dbClient);
 
-            await IdentityServiceLogicLayer.UpdateSystemLockedGlobalSetting(dbClient, Helper.INVALID_ID, false, true);
+            await AdminIdentityService_UpdateIdentityGlobalSettings_LogicLayer.UpdateSystemLockedGlobalSetting(dbClient, Helper.INVALID_ID, false, true);
         }
 
     }   // SystemHelper
