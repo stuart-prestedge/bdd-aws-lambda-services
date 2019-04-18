@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user name request inputs.
          */
-        internal static SetUserNameRequest CheckValidSetUserNameRequest(JObject requestBody) {
+        public static SetUserNameRequest CheckValidSetUserNameRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -65,7 +65,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user name.
          */
-        internal static async Task SetUserName(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserNameRequest setUserNameRequest) {
+        public static async Task SetUserName(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserNameRequest setUserNameRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);

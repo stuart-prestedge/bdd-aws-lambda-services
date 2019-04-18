@@ -15,7 +15,7 @@ using BDDReferenceService.Contracts;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
-namespace UserIdentityService_CloseAccount
+namespace UserIdentityService_SetUserName
 {
     public class LambdaHandler
     {
@@ -37,14 +37,14 @@ namespace UserIdentityService_CloseAccount
                 Debug.AssertValid(dataStores);
                 Debug.AssertValid(requestBody);
 
-                return await CloseAccount(dataStores, request.Headers, requestBody);
+                return await SetUserName(dataStores, request.Headers, requestBody);
             });
         }
 
         /**
-         * Close account.
+         * Set user name.
          */
-        internal async Task<APIGatewayProxyResponse> CloseAccount(IDataStores dataStores,
+        internal async Task<APIGatewayProxyResponse> SetUserName(IDataStores dataStores,
                                                                   IDictionary<string, string> requestHeaders,
                                                                   JObject requestBody)
         {
@@ -55,22 +55,22 @@ namespace UserIdentityService_CloseAccount
 
             try {
                 // Log call
-                LoggingHelper.LogMessage($"UserIdentityService::CloseAccount()");
+                LoggingHelper.LogMessage($"UserIdentityService::SetUserName()");
 
                 // Get the NoSQL DB client
                 AmazonDynamoDBClient dbClient = (AmazonDynamoDBClient)dataStores.GetNoSQLDataStore().GetDBClient();
                 Debug.AssertValid(dbClient);
 
                 // Check inputs
-                CloseAccountRequest closeAccountRequest = UserIdentityService_CloseAccount_LogicLayer.CheckValidCloseAccountRequest(requestBody);
-                Debug.AssertValid(closeAccountRequest);
+                SetUserNameRequest setUserNameRequest = UserIdentityService_SetUserName_LogicLayer.CheckValidSetUserNameRequest(requestBody);
+                Debug.AssertValid(setUserNameRequest);
 
                 // Check authenticated endpoint security
                 string loggedInUserId = await APIHelper.CheckLoggedIn(dbClient, requestHeaders);
                 Debug.AssertID(loggedInUserId);
 
                 // Perform logic
-                await UserIdentityService_CloseAccount_LogicLayer.CloseAccount(dbClient, loggedInUserId, closeAccountRequest);
+                await UserIdentityService_SetUserName_LogicLayer.SetUserName(dbClient, loggedInUserId, setUserNameRequest);
 
                 // Respond
                 return new APIGatewayProxyResponse {
@@ -78,21 +78,10 @@ namespace UserIdentityService_CloseAccount
                 };
             } catch (Exception exception) {
                 Debug.Tested();
-                if (exception.Message == IdentityServiceLogicLayer.ERROR_INCORRECT_PASSWORD) {
-                    Debug.Untested();
-                    //??--return StatusCode(APIHelper.STATUS_CODE_UNAUTHORIZED, new GeneralErrorResponse { error = IdentityServiceLogicLayer.INCORRECT_PASSWORD });
-                    //??--return Unauthorized();
-                    return new APIGatewayProxyResponse {
-                        StatusCode = APIHelper.STATUS_CODE_UNAUTHORIZED,
-                        Body = $"{{ error = \"{IdentityServiceLogicLayer.INCORRECT_PASSWORD}\"}}"
-                    };
-                } else {
-                    Debug.Tested();
-                    return APIHelper.ResponseFromException(exception);
-                }
+                return APIHelper.ResponseFromException(exception);
             }
         }
 
     }   // LambdaHandler
 
-}   // UserIdentityService_CloseAccount
+}   // UserIdentityService_SetUserName
