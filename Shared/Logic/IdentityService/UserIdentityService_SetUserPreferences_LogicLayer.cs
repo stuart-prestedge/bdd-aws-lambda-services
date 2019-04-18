@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user preferences request inputs.
          */
-        internal static SetUserPreferencesRequest CheckValidSetUserPreferencesRequest(JObject requestBody) {
+        public static SetUserPreferencesRequest CheckValidSetUserPreferencesRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -68,7 +68,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user preferences.
          */
-        internal static async Task SetUserPreferences(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserPreferencesRequest setUserPreferencesRequest) {
+        public static async Task SetUserPreferences(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserPreferencesRequest setUserPreferencesRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
