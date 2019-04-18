@@ -65,8 +65,8 @@ namespace BDDReferenceService.Logic
         public const string USER_BLOCKED = "USER_BLOCKED";
         public const string USER_LOCKED = "USER_LOCKED";
         public const string CANNOT_EXTEND_ACCESS_TOKEN = "CANNOT_EXTEND_ACCESS_TOKEN";
-        internal const string EMAIL_IN_USE = "EMAIL_IN_USE";
-        internal const string EMAIL_ALREADY_BEING_CHANGED = "EMAIL_ALREADY_BEING_CHANGED";
+        public const string EMAIL_IN_USE = "EMAIL_IN_USE";
+        public const string EMAIL_ALREADY_BEING_CHANGED = "EMAIL_ALREADY_BEING_CHANGED";
         internal const string EMAIL_ALREADY_VERIFIED = "EMAIL_ALREADY_VERIFIED";
         internal const string INVALID_VERIFY_EMAIL_LINK_ID = "INVALID_VERIFY_EMAIL_LINK_ID";
         internal const string PHONE_NUMBER_VERIFIED = "PHONE_NUMBER_VERIFIED";

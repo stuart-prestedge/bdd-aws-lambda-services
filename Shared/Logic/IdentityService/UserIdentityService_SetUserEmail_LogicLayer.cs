@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user email request inputs.
          */
-        internal static SetUserEmailRequest CheckValidSetUserEmailRequest(JObject requestBody) {
+        public static SetUserEmailRequest CheckValidSetUserEmailRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -55,7 +55,7 @@ namespace BDDReferenceService.Logic
          * Set user email.
          * If email is already in use then throw an exception.
          */
-        internal static async Task SetUserEmail(AmazonDynamoDBClient dbClient, string userId, SetUserEmailRequest setUserEmailRequest) {
+        public static async Task SetUserEmail(AmazonDynamoDBClient dbClient, string userId, SetUserEmailRequest setUserEmailRequest) {
             Debug.Untested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(userId);
