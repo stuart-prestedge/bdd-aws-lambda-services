@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user gender request inputs.
          */
-        internal static SetUserGenderRequest CheckValidSetUserGenderRequest(JObject requestBody) {
+        public static SetUserGenderRequest CheckValidSetUserGenderRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -74,7 +74,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user gender.
          */
-        internal static async Task SetUserGender(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserGenderRequest setUserGenderRequest) {
+        public static async Task SetUserGender(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserGenderRequest setUserGenderRequest) {
             Debug.Tested();
             Debug.AssertID(loggedInUserId);
             Debug.AssertValid(setUserGenderRequest);
