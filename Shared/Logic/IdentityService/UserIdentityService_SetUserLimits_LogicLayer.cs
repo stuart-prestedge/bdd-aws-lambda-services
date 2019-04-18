@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user limits request inputs.
          */
-        internal static SetUserLimitsRequest CheckValidSetUserLimitsRequest(JObject requestBody) {
+        public static SetUserLimitsRequest CheckValidSetUserLimitsRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -95,7 +95,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user limits.
          */
-        internal static async Task SetUserLimits(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserLimitsRequest setUserLimitsRequest) {
+        public static async Task SetUserLimits(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserLimitsRequest setUserLimitsRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
