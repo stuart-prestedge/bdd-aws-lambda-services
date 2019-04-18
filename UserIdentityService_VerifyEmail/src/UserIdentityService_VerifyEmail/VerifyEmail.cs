@@ -15,7 +15,7 @@ using BDDReferenceService.Contracts;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
-namespace UserIdentityService_ResendEmailVerification
+namespace UserIdentityService_VerifyEmail
 {
     public class LambdaHandler
     {
@@ -36,15 +36,15 @@ namespace UserIdentityService_ResendEmailVerification
                 Debug.AssertValid(dataStores);
                 Debug.AssertValid(requestBody);
 
-                return await ResendEmailVerification(dataStores, requestBody);
+                return await VerifyEmail(dataStores, requestBody);
             });
         }
 
         /**
          * Set user address.
          */
-        private async Task<APIGatewayProxyResponse> ResendEmailVerification(IDataStores dataStores,
-                                                                            JObject requestBody)
+        private async Task<APIGatewayProxyResponse> VerifyEmail(IDataStores dataStores,
+                                                                JObject requestBody)
         {
             Debug.Untested();
             Debug.AssertValid(dataStores);
@@ -52,18 +52,18 @@ namespace UserIdentityService_ResendEmailVerification
 
             try {
                 // Log call
-                LoggingHelper.LogMessage($"UserIdentityService::ResendEmailVerification()");
+                LoggingHelper.LogMessage($"UserIdentityService::VerifyEmail()");
 
                 // Get the NoSQL DB client
                 AmazonDynamoDBClient dbClient = (AmazonDynamoDBClient)dataStores.GetNoSQLDataStore().GetDBClient();
                 Debug.AssertValid(dbClient);
 
                 // Check inputs
-                ResendEmailVerificationRequest resendEmailVerificationRequest = UserIdentityService_ResendEmailVerification_LogicLayer.CheckValidResendEmailVerificationRequest(requestBody);
-                Debug.AssertValid(resendEmailVerificationRequest);
+                VerifyEmailRequest verifyEmailRequest = UserIdentityService_VerifyEmail_LogicLayer.CheckValidVerifyEmailRequest(requestBody);
+                Debug.AssertValid(verifyEmailRequest);
 
                 // Perform logic
-                await UserIdentityService_ResendEmailVerification_LogicLayer.ResendEmailVerification(dbClient, resendEmailVerificationRequest);
+                await UserIdentityService_VerifyEmail_LogicLayer.VerifyEmail(dbClient, verifyEmailRequest);
 
                 // Respond
                 return new APIGatewayProxyResponse {
@@ -77,4 +77,4 @@ namespace UserIdentityService_ResendEmailVerification
 
     }   // LambdaHandler
 
-}   // UserIdentityService_ResendEmailVerification
+}   // UserIdentityService_VerifyEmail

@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of verify email request inputs.
          */
-        internal static VerifyEmailRequest CheckValidVerifyEmailRequest(JObject requestBody) {
+        public static VerifyEmailRequest CheckValidVerifyEmailRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -66,7 +66,7 @@ namespace BDDReferenceService.Logic
          * Verify email.
          * ??++BREAK INTO SMALLER METHODS
          */
-        internal static async Task VerifyEmail(AmazonDynamoDBClient dbClient, VerifyEmailRequest verifyEmailRequest) {
+        public static async Task VerifyEmail(AmazonDynamoDBClient dbClient, VerifyEmailRequest verifyEmailRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertValid(verifyEmailRequest);
