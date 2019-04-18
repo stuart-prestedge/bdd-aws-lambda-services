@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of verify phone number request inputs.
          */
-        internal static VerifyPhoneNumberRequest CheckValidVerifyPhoneNumberRequest(JObject requestBody) {
+        public static VerifyPhoneNumberRequest CheckValidVerifyPhoneNumberRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -57,7 +57,7 @@ namespace BDDReferenceService.Logic
         /**
          * Verify phone number.
          */
-        internal static async Task VerifyPhoneNumber(AmazonDynamoDBClient dbClient, string loggedInUserId, VerifyPhoneNumberRequest verifyPhoneNumberRequest) {
+        public static async Task VerifyPhoneNumber(AmazonDynamoDBClient dbClient, string loggedInUserId, VerifyPhoneNumberRequest verifyPhoneNumberRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
