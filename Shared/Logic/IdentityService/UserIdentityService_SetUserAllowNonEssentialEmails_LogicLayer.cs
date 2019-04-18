@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user allow non-essential emails request inputs.
          */
-        internal static SetUserAllowNonEssentialEmailsRequest CheckValidSetUserAllowNonEssentialEmailsRequest(JObject requestBody) {
+        public static SetUserAllowNonEssentialEmailsRequest CheckValidSetUserAllowNonEssentialEmailsRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -66,7 +66,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user allow non-essential emails.
          */
-        internal static async Task SetUserAllowNonEssentialEmails(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserAllowNonEssentialEmailsRequest setUserAllowNonEssentialEmailsRequest) {
+        public static async Task SetUserAllowNonEssentialEmails(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserAllowNonEssentialEmailsRequest setUserAllowNonEssentialEmailsRequest) {
             Debug.Untested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
