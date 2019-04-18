@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Resend phone number verification.
          */
-        internal static async Task ResendPhoneNumberVerification(AmazonDynamoDBClient dbClient, string loggedInUserId) {
+        public static async Task ResendPhoneNumberVerification(AmazonDynamoDBClient dbClient, string loggedInUserId) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
