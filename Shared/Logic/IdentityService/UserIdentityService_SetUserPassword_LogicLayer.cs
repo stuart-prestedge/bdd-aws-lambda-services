@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user password request inputs.
          */
-        internal static SetUserPasswordRequest CheckValidSetUserPasswordRequest(JObject requestBody) {
+        public static SetUserPasswordRequest CheckValidSetUserPasswordRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -61,7 +61,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user password.
          */
-        internal static async Task SetUserPassword(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserPasswordRequest setUserPasswordRequest) {
+        public static async Task SetUserPassword(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserPasswordRequest setUserPasswordRequest) {
             Debug.Untested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);

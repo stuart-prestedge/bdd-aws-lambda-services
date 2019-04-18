@@ -15,7 +15,7 @@ using BDDReferenceService.Contracts;
 // Assembly attribute to enable the Lambda function's JSON input to be converted into a .NET class.
 [assembly: LambdaSerializer(typeof(Amazon.Lambda.Serialization.Json.JsonSerializer))]
 
-namespace UserIdentityService_SetUserEmail
+namespace UserIdentityService_SetUserPassword
 {
     public class LambdaHandler
     {
@@ -37,14 +37,14 @@ namespace UserIdentityService_SetUserEmail
                 Debug.AssertValid(dataStores);
                 Debug.AssertValid(requestBody);
 
-                return await SetUserEmail(dataStores, request.Headers, requestBody);
+                return await SetUserPassword(dataStores, request.Headers, requestBody);
             });
         }
-
+    
         /**
-         * Set user email.
+         * Set user password.
          */
-        internal async Task<APIGatewayProxyResponse> SetUserEmail(IDataStores dataStores,
+        internal async Task<APIGatewayProxyResponse> SetUserPassword(IDataStores dataStores,
                                                                   IDictionary<string, string> requestHeaders,
                                                                   JObject requestBody)
         {
@@ -55,22 +55,22 @@ namespace UserIdentityService_SetUserEmail
 
             try {
                 // Log call
-                LoggingHelper.LogMessage($"UserIdentityService::SetUserEmail()");
+                LoggingHelper.LogMessage($"UserIdentityService::SetUserPassword()");
 
                 // Get the NoSQL DB client
                 AmazonDynamoDBClient dbClient = (AmazonDynamoDBClient)dataStores.GetNoSQLDataStore().GetDBClient();
                 Debug.AssertValid(dbClient);
 
                 // Check inputs
-                SetUserEmailRequest setUserEmailRequest = UserIdentityService_SetUserEmail_LogicLayer.CheckValidSetUserEmailRequest(requestBody);
-                Debug.AssertValid(setUserEmailRequest);
+                SetUserPasswordRequest setUserPasswordRequest = UserIdentityService_SetUserPassword_LogicLayer.CheckValidSetUserPasswordRequest(requestBody);
+                Debug.AssertValid(setUserPasswordRequest);
 
                 // Check authenticated endpoint security
                 string loggedInUserId = await APIHelper.CheckLoggedIn(dbClient, requestHeaders);
                 Debug.AssertID(loggedInUserId);
 
                 // Perform logic
-                await UserIdentityService_SetUserEmail_LogicLayer.SetUserEmail(dbClient, loggedInUserId, setUserEmailRequest);
+                await UserIdentityService_SetUserPassword_LogicLayer.SetUserPassword(dbClient, loggedInUserId, setUserPasswordRequest);
 
                 // Respond
                 return new APIGatewayProxyResponse {
@@ -78,23 +78,11 @@ namespace UserIdentityService_SetUserEmail
                 };
             } catch (Exception exception) {
                 Debug.Tested();
-                if ((exception.Message == IdentityServiceLogicLayer.ERROR_EMAIL_IN_USE) ||
-                    (exception.Message == IdentityServiceLogicLayer.ERROR_EMAIL_ALREADY_BEING_CHANGED)) {
+                if (exception.Message == IdentityServiceLogicLayer.ERROR_INCORRECT_PASSWORD) {
                     Debug.Untested();
-                    GeneralErrorResponse response = new GeneralErrorResponse();
-                    if (exception.Message == IdentityServiceLogicLayer.ERROR_EMAIL_IN_USE) {
-                        Debug.Untested();
-                        response.error = IdentityServiceLogicLayer.EMAIL_IN_USE;
-                    } else if (exception.Message == IdentityServiceLogicLayer.ERROR_EMAIL_ALREADY_BEING_CHANGED) {
-                        Debug.Untested();
-                        response.error = IdentityServiceLogicLayer.EMAIL_ALREADY_BEING_CHANGED;
-                    }
-                    //??--ObjectResult result = new ObjectResult(response);
-                    //??--result.StatusCode = APIHelper.STATUS_CODE_UNAUTHORIZED;
-                    //??--return StatusCode(APIHelper.STATUS_CODE_UNAUTHORIZED, response);
                     return new APIGatewayProxyResponse {
                         StatusCode = APIHelper.STATUS_CODE_UNAUTHORIZED,
-                        Body = JsonConvert.SerializeObject(response)
+                        Body = $"{{ body = \"{IdentityServiceLogicLayer.INCORRECT_PASSWORD}\"}}"
                     };
                 } else {
                     Debug.Tested();
@@ -105,4 +93,4 @@ namespace UserIdentityService_SetUserEmail
 
     }   // LambdaHandler
 
-}   // UserIdentityService_SetUserEmail
+}   // UserIdentityService_SetUserPassword
