@@ -20,7 +20,7 @@ namespace BDDReferenceService.Logic
         /**
          * Check validity of set user address request inputs.
          */
-        internal static SetUserAddressRequest CheckValidSetUserAddressRequest(JObject requestBody) {
+        public static SetUserAddressRequest CheckValidSetUserAddressRequest(JObject requestBody) {
             Debug.Tested();
             Debug.AssertValidOrNull(requestBody);
 
@@ -78,7 +78,7 @@ namespace BDDReferenceService.Logic
         /**
          * Set user address.
          */
-        internal static async Task SetUserAddress(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserAddressRequest setUserAddressRequest) {
+        public static async Task SetUserAddress(AmazonDynamoDBClient dbClient, string loggedInUserId, SetUserAddressRequest setUserAddressRequest) {
             Debug.Tested();
             Debug.AssertValid(dbClient);
             Debug.AssertID(loggedInUserId);
